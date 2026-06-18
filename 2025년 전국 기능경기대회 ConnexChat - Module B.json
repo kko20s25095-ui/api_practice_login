@@ -1,0 +1,235 @@
+{
+  "version": 6,
+  "entities": [
+    {
+      "entity": {
+        "type": "Project",
+        "description": "##### [Authentication]\n사용자 토큰 인증 방식은 Bearer를 사용, 우측 상단 Environments의 token을 수정하여 테스트 진행\n\n##### [API Request Example]\nAPI 요청 응답 Example은 각 Request의 하단 메뉴의 **DESCRIPTION**을 참고 (View 모드 사용)",
+        "id": "686aef2e-4f6d-47d9-89ad-ee8ccb44c3f0",
+        "name": "2025년 전국 기능경기대회 ConnexChat - Module B"
+      },
+      "children": [
+        {
+          "entity": {
+            "type": "Service",
+            "id": "800a9ffb-6c6a-4f7c-8ce8-9d9fb194979b",
+            "name": "001. 인증"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "bodyType": "Text",
+                  "textBody": "{\n    \"email\": \"user000@mod.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "uri": {
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "path": "${baseUrl}/auth/login"
+                },
+                "description": "#### 로그인 성공 - Success\n- **Status Code:** 200 OK\n- **Respoonse Body**\n```\n{\n    \"success\": true,\n    \"message\": \"로그인 성공\",\n    \"data\": {\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyMDAwIiwiZW1haWwiOiJ1c2VyMDAwQG1vZC5jb20iLCJpYXQiOjE3MzcxMDAwMDAsImV4cCI6MTczNzE4NjQwMH0.abc123def456\"\n    }\n}\n```\n---\n#### 로그인 실패 - Validation Error (400 Bad Request)\n- **Status Code:** 400 Bad Request\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"유효성 검사 실패\",\n    \"errors\": [\n        {\n            \"code\": \"INVALID_FORMAT\",\n            \"message\": \"이메일을 입력해주세요.\"\n        },\n        {\n            \"code\": \"INVALID_FORMAT\",\n            \"message\": \"비밀번호는 4자 이상이어야 합니다.\"\n        }\n    ]\n}\n```\n---\n#### 로그인 실패 - Authentication Error (401 Unauthorized)\n- **Status Code:** 401 Unauthorized\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"로그인 실패\",\n    \"errors\": [\n        {\n            \"code\": \"INVALID_CREDENTIALS\",\n            \"message\": \"이메일 또는 비밀번호가 올바르지 않습니다.\"\n        }\n    ]\n}\n```",
+                "id": "4503d128-b941-411e-b7bb-dfd420f91ac3",
+                "name": "로그인",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "assertions": []
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "id": "aceb8b11-235d-4e8a-9cc7-c5472f7ff551",
+            "name": "002. 사용자"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+                  "name": "GET"
+                },
+                "body": {
+                  "bodyType": "Text",
+                  "textBody": ""
+                },
+                "uri": {
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "path": "${baseUrl}/users/me"
+                },
+                "description": "#### 내 정보 조회 성공 - Success\n- **Status Code:** 200 OK\n- **Respoonse Body**\n```\n{\n    \"success\": true,\n    \"data\": {\n        \"id\": 1,\n        \"email\": \"user000@mad.com\",\n        \"name\": \"Competitor1 님\",\n        \"profileImage\": \"https://api.connexchat.com/images/profile/user000.jpg\",\n        \"createdAt\": \"2025-01-20T09:00:00Z\"\n    }\n}\n```\n---\n#### 내 정보 조회 실패 - Authentication Error (401 Unauthorized)\n- **Status Code:** 401 Unauthorized\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"인증이 필요합니다.\",\n    \"errors\": [\n        {\n            \"code\": \"UNAUTHORIZED\",\n            \"message\": \"유효하지 않은 토큰입니다.\"\n        }\n    ]\n}\n```",
+                "id": "7de65fec-df1a-4d55-8b08-baf3df06c452",
+                "name": "내 정보 조회",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${\"token\"}"
+                  }
+                ],
+                "assertions": []
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "id": "d9b0df59-54ed-4fd0-b79f-1c875e400be6",
+            "name": "003. 사원 관리"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+                  "name": "GET"
+                },
+                "body": {
+                  "bodyType": "Text",
+                  "textBody": ""
+                },
+                "uri": {
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "path": "${baseUrl}/employees"
+                },
+                "description": "#### 사원 목록 조회 성공 - Success\n- **Status Code:** 200 OK\n- **Respoonse Body**\n```\n{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"김지훈 대리\",\n            \"department\": \"개발팀\",\n            \"position\": \"대리\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp001.jpg\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"이서연 사원\",\n            \"department\": \"개발팀\",\n            \"position\": \"사원\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp002.jpg\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"박민수 과장\",\n            \"department\": \"개발팀\",\n            \"position\": \"과장\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp003.jpg\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"최유진 사원\",\n            \"department\": \"디자인팀\",\n            \"position\": \"사원\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp004.jpg\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"정우빈 팀장\",\n            \"department\": \"개발팀\",\n            \"position\": \"팀장\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp005.jpg\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"한지민 대리\",\n            \"department\": \"마케팅팀\",\n            \"position\": \"대리\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp006.jpg\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"서민재 사원\",\n            \"department\": \"인사팀\",\n            \"position\": \"사원\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp007.jpg\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"오세훈 대리\",\n            \"department\": \"영업팀\",\n            \"position\": \"대리\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp008.jpg\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"강하늘 과장\",\n            \"department\": \"기획팀\",\n            \"position\": \"과장\",\n            \"profileImage\": \"https://api.connexchat.com/images/profile/emp009.jpg\"\n        }\n    ],\n    \"totalCount\": 9\n}\n```\n---\n#### 사원 목록 조회 실패 - Authentication Error (401 Unauthorized)\n- **Status Code:** 401 Unauthorized\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"인증이 필요합니다.\",\n    \"errors\": [\n        {\n            \"code\": \"UNAUTHORIZED\",\n            \"message\": \"유효하지 않은 토큰입니다.\"\n        }\n    ]\n}\n```",
+                "id": "b213975e-8abe-46d7-b4f2-9b96c8278118",
+                "name": "사원 목록 조회",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyMDAwIiwiZW1haWwiOiJ1c2VyMDAwQG1vZC5jb20iLCJpYXQiOjE3MzcxMDAwMDAsImV4cCI6MTczNzE4NjQwMH0.abc123def456\"}"
+                  }
+                ],
+                "assertions": []
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "id": "f57c55ee-cc6f-4e6d-883d-be3838ea143b",
+            "name": "004. 채팅방 관리"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+                  "name": "GET"
+                },
+                "body": {
+                  "bodyType": "Text",
+                  "textBody": ""
+                },
+                "uri": {
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "path": "${baseUrl}/chatrooms"
+                },
+                "description": "#### 채팅방 목록 조회 성공 - Success\n- **Status Code:** 200 OK\n- **Respoonse Body**\n```\n{\n    \"success\": true,\n    \"data\": {\n        \"chatrooms\": [\n            {\n                \"id\": 1,\n                \"roomName\": \"채팅방 이름\",\n                \"lastMessage\": \"채팅방 목록의 대화 내용입니다...\",\n                \"lastMessageTime\": \"오후 10:21\",\n                \"unreadCount\": 0,\n                \"participants\": [\n                    1,\n                    2,\n                    3\n                ]\n            },\n            {\n                \"id\": 2,\n                \"roomName\": \"채팅방 이름\",\n                \"lastMessage\": \"채팅방 목록의 대화 내용입니다...\",\n                \"lastMessageTime\": \"오후 10:21\",\n                \"unreadCount\": 0,\n                \"participants\": [\n                    1,\n                    4,\n                    5\n                ]\n            },\n            {\n                \"id\": 3,\n                \"roomName\": \"채팅방 이름\",\n                \"lastMessage\": \"채팅방 목록의 대화 내용입니다...\",\n                \"lastMessageTime\": \"오후 10:21\",\n                \"unreadCount\": 0,\n                \"participants\": [\n                    2,\n                    3,\n                    6\n                ]\n            }\n        ],\n        \"totalCount\": 3\n    }\n}\n```\n---\n#### 채팅방 목록 조회 실패 - Authentication Error (401 Unauthorized)\n- **Status Code:** 401 Unauthorized\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"인증이 필요합니다.\",\n    \"errors\": [\n        {\n            \"code\": \"UNAUTHORIZED\",\n            \"message\": \"유효하지 않은 토큰입니다.\"\n        }\n    ]\n}\n```",
+                "id": "3a379b54-7ac0-49fa-b8fd-bb55aa73e9fe",
+                "name": "채팅방 목록 조회",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${\"token\"}"
+                  }
+                ],
+                "assertions": []
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "https://tools.ietf.org/html/rfc7231#section-4.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "bodyType": "Text",
+                  "textBody": "{\n    \"roomName\": \"새로운 채팅방\",\n    \"participants\": [\n        1,\n        2,\n        5\n    ]\n}"
+                },
+                "uri": {
+                  "scheme": {
+                    "name": "http",
+                    "version": "V11"
+                  },
+                  "path": "${baseUrl}/chatrooms"
+                },
+                "description": "#### 채팅방 생성 성공 - Success\n- **Status Code:** 200 OK\n- **Respoonse Body**\n```\n{\n    \"success\": true,\n    \"message\": \"채팅방이 생성되었습니다.\",\n    \"data\": {\n        \"id\": 7,\n        \"roomName\": \"새로운 채팅방\",\n        \"participants\": [\n            {\n                \"id\": 1,\n                \"name\": \"김지훈 대리\",\n                \"profileImage\": \"https://api.connexchat.com/images/profile/emp001.jpg\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"박민수 과장\",\n                \"profileImage\": \"https://api.connexchat.com/images/profile/emp003.jpg\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"정우빈 팀장\",\n                \"profileImage\": \"https://api.connexchat.com/images/profile/emp005.jpg\"\n            }\n        ],\n        \"createdAt\": \"2025-01-20T10:30:00Z\",\n        \"createdBy\": \"user000\"\n    }\n}\n```\n---\n#### 채팅방 생성 유효성 검사 실패 - Validation Error (400 Bad Request)\n- **Status Code:** 400 Bad Request\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"유효성 검사 실패\",\n    \"errors\": [\n        {\n            \"code\": \"NO_ARGUMENTS\",\n            \"message\": \"섹션 이름을 입력해주세요.\"\n        },\n        {\n            \"code\": \"NO_ARGUMENTS\",\n            \"message\": \"채팅방 이름을 입력해주세요.\"\n        },\n        {\n            \"code\": \"INVALID_PARTICIPANTS\",\n            \"message\": \"존재하지 않는 사원입니다.\"\n        }\n    ]\n}\n```\n---\n#### 채팅방 생성 참여자 추가 에러 - Invalid User Error (400 Bad Request)\n- **Status Code:** 400 Bad Request\n- **Respoonse Body**\n```\n{\n    \"success\": false,\n    \"message\": \"채팅방 생성 실패\",\n    \"errors\": [\n        {\n            \"code\": \"NO_PARTICIPANTS\",\n            \"message\": \"참여자를 1명 이상 선택해주세요.\"\n        }\n    ]\n}\n```",
+                "id": "dcbe2386-b8ae-4a14-bb11-fbc725e5f933",
+                "name": "채팅방 생성",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${\"token\"}"
+                  }
+                ],
+                "assertions": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "id": "025a18d5-4636-45fa-9ec8-95501bfec044",
+      "name": "2025년 전국 기능경기대회 ConnexChat - Module B",
+      "variables": {
+        "f24492ba-8a72-4c71-9902-6a36cb926c31": {
+          "createdAt": "2025-08-22T18:00:07.076+09:00",
+          "name": "baseUrl",
+          "value": "http://api.connexchat.com",
+          "enabled": true,
+          "private": false
+        },
+        "b7f7280c-4826-46bc-bb8b-dddb9b3d717e": {
+          "createdAt": "2025-08-22T18:00:12.876+09:00",
+          "name": "token",
+          "value": "token_example",
+          "enabled": true,
+          "private": false
+        }
+      }
+    }
+  ]
+}
